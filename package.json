@@ -1,0 +1,24 @@
+{
+  "name": "gocodebot",
+  "version": "1.0.0",
+  "description": "I'm a slack bot that helps Go Code Colorado teams get started with Waffle",
+  "main": "index.js",
+  "dependencies": {
+    "botkit": "0.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waffleio/gocodebot.git"
+  },
+  "author": "Andrew homeyer <homeyer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/waffleio/gocodebot/issues"
+  },
+  "homepage": "https://github.com/waffleio/gocodebot#readme"
+}
