@@ -3,6 +3,7 @@ require('./keep-alive');
 var Botkit = require('Botkit');
 var GitHub = require("github");
 var Jarvis = require('./jarvis');
+var chalk = require('chalk');
 
 var github = new GitHub({
     version: "3.0.0",
@@ -38,7 +39,9 @@ controller.hears(['create team'], ['direct_message', 'direct_mention'], function
     jarvis.createTeam(convo, function(){
       jarvis.addTeamMembers(convo, function(){
         jarvis.createContent(convo, function(url){
+          console.log(chalk.bgBlue('here?'));
           convo.say(`Ok, we’re all set. The team can get started at ${url}`);
+          convo.next();
         });
       });
     });
