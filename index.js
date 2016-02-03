@@ -1,4 +1,5 @@
 var Botkit = require('Botkit');
+require('./keep-alive');
 
 var controller = Botkit.slackbot();
 
