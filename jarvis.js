@@ -63,9 +63,10 @@ class Jarvis {
     var me = this;
 
     convo.ask('Who would you like to add to the team?', function(response, convo){
+      console.log('response', response);
 
       var teamMembers = response.text.split(/[\s,]+/);
-      var printableTeamMembers = teamMembers.splice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
+      var printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
 
       var userExistencePromises = teamMembers.map(function(member){
         return new Promise(function(resolve, reject){
@@ -83,22 +84,24 @@ class Jarvis {
       Promise.all(userExistencePromises)
       .then(function(values){
 
-        var addMembershipPromises = teamMembers.map(function(member){
-          return new Promise(function(resolve, reject){
-            github.orgs.addTeamMembership({
-              id: me.team.id,
-              user: member
-            }, function(err, data){
-              if(err){
-                return reject(`Uh oh, we couldn't add ${member}.`);
-              }
-              resolve(data);
+        var sequence = Promise.resolve();
+        teamMembers.forEach(function(member){
+          sequence = sequence.then(function(){
+            return new Promise(function(resolve, reject){
+              github.orgs.addTeamMembership({
+                id: me.team.id,
+                user: member
+              }, function(err, data){
+                if(err){
+                  return reject(`Uh oh, we couldn't add ${member}.`);
+                }
+                resolve(data);
+              });
             });
           });
         });
 
-        return Promise.all(addMembershipPromises)
-        .then(function(values){
+        sequence.then(function(values){
           convo.say(`Great, I’ve invited ${printableTeamMembers} to join the team.`);
           callback();
         })
@@ -241,7 +244,7 @@ class Jarvis {
 
         var sequence = Promise.resolve();
         cards.forEach(function(card){
-          sequence.then(function(){
+          sequence = sequence.then(function(){
 
             return new Promise(function(resolve, reject){
               github.issues.create({
