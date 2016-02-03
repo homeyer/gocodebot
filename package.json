@@ -4,7 +4,9 @@
   "description": "I'm a slack bot that helps Go Code Colorado teams get started with Waffle",
   "main": "index.js",
   "dependencies": {
-    "botkit": "0.0.5"
+    "botkit": "0.0.5",
+    "github": "^0.2.4",
+    "nodemon": "^1.8.1"
   },
   "devDependencies": {},
   "scripts": {

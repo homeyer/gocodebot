@@ -1,5 +1,21 @@
-var Botkit = require('Botkit');
 require('./keep-alive');
+
+var Botkit = require('Botkit');
+var GitHub = require("github");
+var Jarvis = require('./jarvis');
+
+var github = new GitHub({
+    version: "3.0.0",
+    debug: true,
+    timeout: 2000,
+    headers: {
+        "user-agent": "gocodebot"
+    }
+});
+github.authenticate({
+    type: "oauth",
+    token: process.env.GITHUB_API_TOKEN
+});
 
 var controller = Botkit.slackbot();
 
@@ -11,41 +27,21 @@ controller.spawn({
   }
 });
 
-controller.hears(['create team'],['direct_message','direct_mention'], function(bot, message){
+controller.hears(['create team'], ['direct_message', 'direct_mention'], function(bot, message){
 
-  // start a conversation to handle this response.
-  bot.startConversation(message, function(err,convo) {
+  bot.startConversation(message, function(err, convo) {
 
-    convo.ask('I can do that. What’s the team’s name?', function(response, convo){
+    convo.say('I can do that.');
 
-      var teamName = response.text;
-      // TODO create team
+    var jarvis = new Jarvis(github);
 
-      convo.ask('Who would you like to add to the team?', function(response, convo){
-
-        var teamMembers = response.text.split(/[\s,]+/);
-        var printableTeamMembers = teamMembers.splice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
-
-        //TODO check existance of each team mate
-        //TODO add member to team
-
-        convo.say(`Great, I’ve created team ${teamName} and invited ${printableTeamMembers} to join it. I’m setting up the project for them now.`)
-
-        //TODO create repo
-        //TODO assign repo to team
-        //TODO create README with link to waffle board
-        //TODO create issues
-
-        var url = 'https://github.com/GoCodeColorado/organic-robots';
-
-        convo.say(`Ok, we’re all set. The team can get started at ${url}`);
-
-        convo.next();
+    jarvis.createTeam(convo, function(){
+      jarvis.addTeamMembers(convo, function(){
+        jarvis.createContent(convo, function(url){
+          convo.say(`Ok, we’re all set. The team can get started at ${url}`);
+        });
       });
-
-      convo.next();
     });
-
 
   });
 
