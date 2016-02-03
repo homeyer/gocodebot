@@ -19,7 +19,8 @@ class Jarvis {
 
         github.repos.createFromOrg({
           name: response.text,
-          org: process.env.GITHUB_ORGANIZATION
+          org: process.env.GITHUB_ORGANIZATION,
+          private: true
         }, function(err, data){
           if(err){
             convo.say(`Sorry, I can't do that: ${JSON.parse(err.message).errors[0].message}`);
@@ -190,11 +191,11 @@ class Jarvis {
       {name: 'invalidated', color: 'fbca04'},
       {name: 'design needed', color: 'eb6420'},
       {name: 'dev needed', color: 'bfd4f2'},
-      {name: 'sprint 1', color: 'ddd1e7'},
-      {name: 'sprint 2', color: 'bba3d0'},
-      {name: 'sprint 3', color: '9975b9'},
-      {name: 'sprint 4', color: '7647a2'},
-      {name: 'sprint 5', color: '551a8b'}
+      {name: 'sprint 1', color: '91aab3'},
+      {name: 'sprint 2', color: '235668'},
+      {name: 'sprint 3', color: 'f7b5b2'},
+      {name: 'sprint 4', color: '91aab3'},
+      {name: 'sprint 5', color: 'f7b5b2'}
     ];
 
     var sequence = Promise.resolve();
