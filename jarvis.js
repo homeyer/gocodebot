@@ -39,7 +39,7 @@ class Jarvis {
               return convo.next();
             }
             me.team = data;
-            convo.say(`Great! I've created ${process.env.GITHUB_ORGANIZATION}/${me.teamName}.`);
+            convo.say(`Great! I've created ${me.teamName} in ${process.env.GITHUB_ORGANIZATION}.`);
             callback();
             convo.next();
           });
@@ -62,8 +62,7 @@ class Jarvis {
     var github = this.github;
     var me = this;
 
-    convo.ask('Who would you like to add to the team?', function(response, convo){
-      console.log('response', response);
+    convo.ask('Who would you like to add to the team? (Comma-separated list of GitHub usernames)', function(response, convo){
 
       var teamMembers = response.text.split(/[\s,]+/);
       var printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
@@ -109,7 +108,7 @@ class Jarvis {
       })
       .catch(function(reason){
         convo.say(reason);
-        me.addTeamMembers();
+        me.addTeamMembers(convo, callback);
         convo.next();
       })
 
