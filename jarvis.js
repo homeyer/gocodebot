@@ -97,15 +97,10 @@ class Jarvis {
           });
         });
 
-        Promise.all(addMembershipPromises)
+        return Promise.all(addMembershipPromises)
         .then(function(values){
           convo.say(`Great, I’ve invited ${printableTeamMembers} to join the team.`);
           callback();
-        })
-        .catch(function(reason){
-          convo.say(reason);
-          me.addTeamMembers();
-          convo.next();
         })
 
       })
@@ -120,79 +115,70 @@ class Jarvis {
 
 
   createContent(convo, callback) {
-    console.log('in createContent');
     var me = this;
 
     convo.say("I'm starting your team off with some tips in your README. Hang on a sec.");
 
-    me.createReadme(function(err){
-      console.log(chalk.bgRed('done creating readme'), err);
-      if(err){
-        convo.say(err);
-        return;
-      }
-
-      me.createLabels(function(err){
-        console.log(chalk.bgRed('done creating labels'), err);
-        if(err){
-          convo.say(err);
-          return;
-        }
-
+    me.createReadme()
+    .then(function(){
+      return me.createLabels();
+    })
+    .then(function(){
+      // we get errors if we don't wait a moment after creating labels
+      return new Promise(function(resolve, reject){
         setTimeout(function(){
-          me.createIssues(function(err){
-            console.log(chalk.bgRed('done creating issues'), err);
-            if(err){
-              convo.say(err);
-              return;
-            }
-
-            var url = `https://github.com/${process.env.GITHUB_ORGANIZATION}/${me.team.name}`;
-
-            callback(url);
-
-          });
+          resolve();
         }, 1000);
-
-      })
-
-    });
+      });
+    })
+    .then(function(){
+      return me.createIssues();
+    })
+    .then(function(){
+      callback();
+    })
+    .catch(function(reason){
+      convo.say(reason);
+    })
 
   }
 
-  createReadme(callback) {
+  createReadme() {
     var me = this;
     var github = this.github;
 
-    fs.readFile(path.join(__dirname, 'content', 'README-template.md'), function(err, data){
-      if(err){
-          return callback(err);
-      }
+    return new Promise(function(resolve, reject){
 
-      var readme = data.toString();
-      readme = readme.replace(/:owner/g, process.env.GITHUB_ORGANIZATION);
-      readme = readme.replace(/:repo/g, me.team.name);
-
-      var base64 = new Buffer(readme).toString('base64');
-
-      github.repos.createFile({
-        user: process.env.GITHUB_ORGANIZATION,
-        repo: me.team.name,
-        path: 'README.md',
-        message: 'GoCodeBot was here',
-        content: base64
-
-      }, function(err, data){
+      fs.readFile(path.join(__dirname, 'content', 'README-template.md'), function(err, data){
         if(err){
-          return callback(err);
+            return callback(err);
         }
-        callback(null);
+
+        var readme = data.toString();
+        readme = readme.replace(/:owner/g, process.env.GITHUB_ORGANIZATION);
+        readme = readme.replace(/:repo/g, me.team.name);
+
+        var base64 = new Buffer(readme).toString('base64');
+
+        github.repos.createFile({
+          user: process.env.GITHUB_ORGANIZATION,
+          repo: me.team.name,
+          path: 'README.md',
+          message: 'GoCodeBot was here',
+          content: base64
+
+        }, function(err, data){
+          if(err){
+            return reject(err);
+          }
+          resolve();
+        });
       });
     });
   }
 
 
-  createLabels(callback) {
+  createLabels() {
     var me = this;
     var github = this.github;
 
@@ -209,76 +195,78 @@ class Jarvis {
       {name: 'sprint 5', color: '551a8b'}
     ];
 
-    var promises = labels.map(function(label){
-      return new Promise(function(resolve, reject){
-        github.issues.createLabel({
-          user: process.env.GITHUB_ORGANIZATION,
-          repo: me.team.name,
-          name: label.name,
-          color: label.color
-        }, function(err, data){
-          if(err){
-            return reject(err);
-          }
-          resolve(data);
-        })
-      })
-    });
-
-    Promise.all(promises)
-    .then(function(){
-      callback();
-    })
-    .catch(function(err){
-      callback(err);
-    });
-  }
-
-
-  createIssues(callback) {
-    var me = this;
-    var github = this.github;
-
-    fs.readFile(path.join(__dirname, 'content', 'cards.json'), 'utf8', function(err, data){
-      if(err){
-        return next(err);
-      }
-
-      var cardsMetadata = JSON.parse(data);
-
-      var cards = cardsMetadata.map(function(metadata){
-        return {
-          title: metadata.title,
-          // labels: metadata.labels,
-          description: fs.readFileSync(path.join(__dirname, 'content', 'cards', metadata.file), 'utf8')
-        }
-      });
-
-      var promises = cards.map(function(card){
-        return new Promise(function(resolve, reject){
-          github.issues.create({
+    var sequence = Promise.resolve();
+    labels.forEach(function(label){
+      sequence = sequence.then(function(){
+        new Promise(function(resolve, reject){
+          github.issues.createLabel({
             user: process.env.GITHUB_ORGANIZATION,
             repo: me.team.name,
-            title: card.title,
-            labels: card.labels,
-            body: card.description
+            name: label.name,
+            color: label.color
           }, function(err, data){
             if(err){
               return reject(err);
             }
             resolve(data);
           })
-        })
+        });
       })
+    });
 
-      Promise.all(promises)
-      .then(function(){
-        callback();
-      })
-      .catch(function(err){
-        callback(err);
-      })
-  });
+    return sequence;
+  }
+
+
+  createIssues() {
+    var me = this;
+    var github = this.github;
+
+    return new Promise(function(resolve, reject){
+
+      fs.readFile(path.join(__dirname, 'content', 'cards.json'), 'utf8', function(err, data){
+        if(err){
+          return reject(err);
+        }
+
+        var cardsMetadata = JSON.parse(data);
+
+        var cards = cardsMetadata.map(function(metadata){
+          return {
+            title: metadata.title,
+            labels: metadata.labels,
+            description: fs.readFileSync(path.join(__dirname, 'content', 'cards', metadata.file), 'utf8')
+          }
+        });
+
+        var sequence = Promise.resolve();
+        cards.forEach(function(card){
+          sequence.then(function(){
+
+            return new Promise(function(resolve, reject){
+              github.issues.create({
+                user: process.env.GITHUB_ORGANIZATION,
+                repo: me.team.name,
+                title: card.title,
+                labels: card.labels,
+                body: card.description
+              }, function(err, data){
+                if(err){
+                  return reject(err);
+                }
+                resolve(data);
+              });
+            });
+          });
+        });
+
+        sequence.then(function(){
+          resolve();
+        }).catch(function(err){
+          reject(err);
+        })
+      });
+    });
   }
 
 

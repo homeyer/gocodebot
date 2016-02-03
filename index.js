@@ -39,8 +39,7 @@ controller.hears(['create team'], ['direct_message', 'direct_mention'], function
     jarvis.createTeam(convo, function(){
       jarvis.addTeamMembers(convo, function(){
         jarvis.createContent(convo, function(url){
-          console.log(chalk.bgBlue('here?'));
-          convo.say(`Ok, we’re all set. The team can get started at ${url}`);
+          convo.say(`Ok, we’re all set. The team can get started at https://github.com/${process.env.GITHUB_ORGANIZATION}/${jarvis.team.name}`);
           convo.next();
         });
       });
