@@ -1,6 +1,6 @@
 require('./keep-alive');
 
-var Botkit = require('Botkit');
+var Botkit = require('botkit');
 var GitHub = require("github");
 var Jarvis = require('./jarvis');
 var chalk = require('chalk');
