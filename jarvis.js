@@ -90,7 +90,7 @@ class Jarvis {
             return new Promise(function(resolve, reject){
               github.orgs.addTeamMembership({
                 id: me.team.id,
-                user: maintainer
+                user: member
               }, function(err, data){
                 if(err){
                   return reject(`Uh oh, we couldn't add ${member}.`);
