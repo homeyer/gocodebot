@@ -32,7 +32,7 @@ class Jarvis {
           github.orgs.createTeam({
             org: process.env.GITHUB_ORGANIZATION,
             name: me.teamName,
-            permission: 'push',
+            permission: 'admin',
             repo_names: [`${process.env.GITHUB_ORGANIZATION}/${me.teamName}`]
           }, function(err, data){
             if(err){
