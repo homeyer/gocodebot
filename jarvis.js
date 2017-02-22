@@ -23,7 +23,7 @@ class Jarvis {
           private: true
         }, function(err, data){
           if(err){
-            convo.say(`Sorry, I can't do that: ${JSON.parse(err.message).errors[0].message}`);
+            convo.say(`Sorry, I can't do that: ${JSON.parse(err).message}`);
             return convo.next();
           }
 
