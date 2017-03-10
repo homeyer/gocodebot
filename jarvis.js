@@ -63,7 +63,7 @@ class Jarvis {
     var github = this.github;
     var me = this;
 
-    convo.ask('Who would you like to add to the team? (Comma-separated list of GitHub usernames)', function(response, convo){
+    convo.ask('Who would you like to add to your team? (this should be a comma-separated list of all your team member\'s GitHub usernames, yourself included, and please do not include the @-sign)', function(response, convo){
 
       var teamMembers = response.text.split(/[\s,]+/);
       var printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
