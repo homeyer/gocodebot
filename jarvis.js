@@ -13,7 +13,8 @@ class Jarvis {
     var github = this.github;
     var me = this;
 
-    convo.ask('What’s the team’s name?', [{
+    convo.say('OK! Let\'s get started. But first, make sure everyone on your team already has a GitHub.com user account (or stop now and come back when they do).')
+    convo.ask('Ready? What’s your team’s name? No spaces or hyphens, please.', [{
       pattern: /^[a-z0-9]+$/i,
       callback: function(response, convo) {
 
