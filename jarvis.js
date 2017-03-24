@@ -13,7 +13,8 @@ class Jarvis {
     var github = this.github;
     var me = this;
 
-    convo.ask('What’s the team’s name?', [{
+    convo.say('OK! Let\'s get started. But first, make sure everyone on your team already has a GitHub.com user account (or stop now and come back when they do).')
+    convo.ask('Ready? What’s your team’s name? No spaces or hyphens, please.', [{
       pattern: /^[a-z0-9]+$/i,
       callback: function(response, convo) {
 
@@ -63,7 +64,7 @@ class Jarvis {
     var github = this.github;
     var me = this;
 
-    convo.ask('Who would you like to add to the team? (Comma-separated list of GitHub usernames)', function(response, convo){
+    convo.ask('Who would you like to add to your team? (this should be a comma-separated list of all your team member\'s GitHub usernames, yourself included, and please do not include the @-sign)', function(response, convo){
 
       var teamMembers = response.text.split(/[\s,]+/);
       var printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
