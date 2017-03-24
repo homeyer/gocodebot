@@ -1,10 +1,10 @@
 ### Should you Pivot or Persevere?
 
-What feedback did you receive from potential customers? 
+What feedback did you receive from potential customers?
 
-If the feedback confirmed that you're solving the right problem, for the right people, in the right way, awesome! Let's move forward.
+If the feedback confirmed that you're solving the right problem, for the right people, in the right way, while using public data, awesome! Let's move forward.
 
-If you received feedback that makes you want to rethink your problem, customer segment, or solution, now's the time. 
+If you received feedback that makes you want to rethink your problem, customer segment, or solution, now's the time.
 
 - Update your lean canvas, and consider going back to the brainstorming and paper prototyping phase to take another shot at it.
 

@@ -5,6 +5,11 @@
         "labels": ["sprint 1", "ready"]
     },
     {
+        "title": "Read Judging criteria",
+        "file": "read-judging-criteria.md",
+        "labels": ["sprint 1", "ready"]
+    },
+    {
         "title": "What Problem Is Worth Solving?",
         "file": "problem.md",
         "labels": ["sprint 1", "ready"]
@@ -27,6 +32,11 @@
     {
         "title": "Paper Prototypes",
         "file": "paper-prototypes.md",
+        "labels": ["sprint 2"]
+    },
+    {
+        "title": "Check the data",
+        "file": "check-the-data.md",
         "labels": ["sprint 2"]
     },
     {
