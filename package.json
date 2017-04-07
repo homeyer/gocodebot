@@ -6,8 +6,9 @@
   "dependencies": {
     "botkit": "0.0.5",
     "chalk": "^1.1.1",
-    "github": "^0.2.4",
-    "nodemon": "^1.8.1"
+    "github": "9.1.0",
+    "nodemon": "^1.11.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {

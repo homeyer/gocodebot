@@ -49,3 +49,9 @@ controller.hears(['create team'], ['direct_message', 'direct_mention'], function
   });
 
 });
+
+// controller.hears(['add (.*) to (.*)'], ['direct_message', 'direct_mention'], function(bot, message){
+//
+//   var jarvis = new Jarvis(github);
+//
+// })

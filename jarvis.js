@@ -2,6 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
+var request = require('request');
 
 class Jarvis {
   constructor(github){
@@ -18,7 +19,7 @@ class Jarvis {
       pattern: /^[a-z0-9]+$/i,
       callback: function(response, convo) {
 
-        github.repos.createFromOrg({
+        github.repos.createForOrg({
           name: response.text,
           org: process.env.GITHUB_ORGANIZATION,
           private: true
@@ -32,18 +33,29 @@ class Jarvis {
 
           github.orgs.createTeam({
             org: process.env.GITHUB_ORGANIZATION,
-            name: me.teamName,
-            permission: 'push',
-            repo_names: [`${process.env.GITHUB_ORGANIZATION}/${me.teamName}`]
+            name: me.teamName
           }, function(err, data){
             if(err){
               convo.say(`Sorry, I can't do that: ${JSON.parse(err.message).errors[0].message}`);
               return convo.next();
             }
-            me.team = data;
-            convo.say(`Great! I've created ${me.teamName} in ${process.env.GITHUB_ORGANIZATION}.`);
-            callback();
-            convo.next();
+            me.team = data.data;
+
+            github.orgs.addTeamRepo({
+              id: me.team.id,
+              org: process.env.GITHUB_ORGANIZATION,
+              repo: me.teamName,
+              permission: 'admin'
+            }, function(err, data){
+              if(err){
+                convo.say(`Sorry, I can't do that: ${JSON.parse(err.message).errors[0].message}`);
+                return convo.next();
+              }
+              convo.say(`Great! I've created ${me.teamName} in ${process.env.GITHUB_ORGANIZATION}.`);
+              callback();
+              convo.next();
+            });
+
           });
         });
 
@@ -63,46 +75,60 @@ class Jarvis {
   addTeamMembers(convo, callback) {
     var github = this.github;
     var me = this;
+    var printableTeamMembers;
 
     convo.ask('Who would you like to add to your team? (this should be a comma-separated list of all your team member\'s GitHub usernames, yourself included, and please do not include the @-sign)', function(response, convo){
 
       var teamMembers = response.text.split(/[\s,]+/);
-      var printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
+      if(teamMembers.length == 1){
+        printableTeamMembers = teamMembers[0];
+      } else {
+        printableTeamMembers = teamMembers.slice(0, teamMembers.length-1).join(', ') + ' and ' + teamMembers[teamMembers.length-1];
+      }
 
       var userExistencePromises = teamMembers.map(function(member){
         return new Promise(function(resolve, reject){
-          github.user.getFrom({
-            user: member
-          }, function(err, data){
-            if(err){
+          request.get({
+            url: 'https://api.github.com/users/' + member,
+            qs: {
+              access_token: process.env.GITHUB_API_TOKEN
+            },
+            headers: {
+              'User-Agent': 'gocodebot'
+            }
+          }, function(err, response, body){
+            if(err || response.statusCode != 200){
+              console.log(err || body);
               return reject(`Uh oh, we couldn't find ${member}. Let's try that again.`);
             }
-            resolve(data);
-          });
+            resolve();
+          })
         });
       });
 
       Promise.all(userExistencePromises)
-      .then(function(values){
+      .then(function(){
 
         var sequence = Promise.resolve();
         teamMembers.forEach(function(member){
           sequence = sequence.then(function(){
             return new Promise(function(resolve, reject){
+              console.log('team: ', me.team);
               github.orgs.addTeamMembership({
                 id: me.team.id,
-                user: member
+                username: member,
+                role: 'maintainer'
               }, function(err, data){
                 if(err){
                   return reject(`Uh oh, we couldn't add ${member}.`);
                 }
-                resolve(data);
+                resolve();
               });
             });
           });
         });
 
-        sequence.then(function(values){
+        sequence.then(function(){
           convo.say(`Great, I’ve invited ${printableTeamMembers} to join the team.`);
           callback();
         })
@@ -165,7 +191,7 @@ class Jarvis {
         var base64 = new Buffer(readme).toString('base64');
 
         github.repos.createFile({
-          user: process.env.GITHUB_ORGANIZATION,
+          owner: process.env.GITHUB_ORGANIZATION,
           repo: me.team.name,
           path: 'README.md',
           message: 'GoCodeBot was here',
@@ -204,7 +230,7 @@ class Jarvis {
       sequence = sequence.then(function(){
         new Promise(function(resolve, reject){
           github.issues.createLabel({
-            user: process.env.GITHUB_ORGANIZATION,
+            owner: process.env.GITHUB_ORGANIZATION,
             repo: me.team.name,
             name: label.name,
             color: label.color
@@ -212,7 +238,7 @@ class Jarvis {
             if(err){
               return reject(err);
             }
-            resolve(data);
+            resolve(data.data);
           })
         });
       })
@@ -249,7 +275,7 @@ class Jarvis {
 
             return new Promise(function(resolve, reject){
               github.issues.create({
-                user: process.env.GITHUB_ORGANIZATION,
+                owner: process.env.GITHUB_ORGANIZATION,
                 repo: me.team.name,
                 title: card.title,
                 labels: card.labels,
@@ -258,7 +284,7 @@ class Jarvis {
                 if(err){
                   return reject(err);
                 }
-                resolve(data);
+                resolve(data.data);
               });
             });
           });
