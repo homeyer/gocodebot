@@ -5,6 +5,11 @@
         "labels": ["sprint 1", "ready"]
     },
     {
+        "title": "Company Formation",
+        "file": "company-formation.md",
+        "labels": ["sprint 1", "ready"]
+    },
+    {
         "title": "Read Judging criteria",
         "file": "read-judging-criteria.md",
         "labels": ["sprint 1", "ready"]
