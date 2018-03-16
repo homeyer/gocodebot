@@ -1,16 +1,12 @@
-### 2017 Challenge Statement
+### 2018 Challenge Statement
 
-This year's challenge statement is "Build an app that uses public data to solve a problem for a business decision-maker."
-
-Check out this page on tips for figuring out what to build: http://gocode.colorado.gov/compete/challenge-statement/
-
-Need help finding an idea? Look at the IdeaBuzz platform where Colorado businesses posted their needs: https://ideabuzz.com/a/buzz/gocodecolorado/gocodecolorado
-
-Note: You do not have to choose an idea from IdeaBuzz. Using your own idea is just great.
+This year's challenge statement is "Build a product that uses public data to deliver insights for a business decision-maker."
 
 ### Find a problem that's worth solving
 
-A lean canvas is a great way to lay out key components of your business model so you can start testing your assumptions and get to building something customers want *as fast as possible*.
+Go talk to folks who make decisions for their business: the head of a small business or middle management in a large business. Whoever that is, start asking them: How do you make decisions? What information do you use? What kind of research do you conduct? And, very important, what are the gaps that you would like filled? Find the data that can help fill in those gaps, and that’s your idea. Now, get to work on the product.
+
+A lean canvas is a great way to lay out key components of your idea so you can start testing your assumptions and get to building something customers want *as fast as possible*.
 
 To create a free digital version of a lean canvas, go to [Canvanizer](https://canvanizer.com/new/lean-canvas). Alternatively, you can print [this lean canvas](https://cloud.githubusercontent.com/assets/100216/12663330/7f1ced9e-c5e4-11e5-9a5d-87582d98bfc3.png)
 
