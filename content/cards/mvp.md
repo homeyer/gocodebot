@@ -1,6 +1,6 @@
-### Define a testable Minimum Viable Product
+### Define a testable Minimum Viable Product (MVP)
 
-An MVP is the smallest possible increment of your solution that delivers enough value for you to be able to ship it and learn from customers as quickly as possible.
+An MVP is the smallest possible increment of your solution that delivers enough value for you to be able to deliver it and learn from customers as quickly as possible.
 
 - [ ] Agree as a team: from your paper prototype and lean canvas, what's the riskiest assumption you're making?
 
@@ -10,6 +10,6 @@ For example, if you were building a device that would automatically pour beer fo
 
 - [ ] Take that increment and create cards on your board to represent what your team needs to get done in the next Sprint to build that iteration. Think about what it will take to test your MVP - it's not just about building something, it's about building something you can use to learn from *as fast as possible*.
 
-This backlog of work can be used in your pitch too. If you don't finish your entire backlog before it's time to be judged, this backlog defines what's next for your team: how are you going to use the winnings to continue building your business and solving the problem for your customer?
+This backlog of work can be used in your pitch too. If you don't finish your entire backlog before it's time to be judged, this backlog defines what's next for your team: how are you going to use the winnings to continue building your product and solving the problem for your customer?
 
 ![MVP](https://pbs.twimg.com/media/BzUBDdhCEAAdmsp.jpg)
