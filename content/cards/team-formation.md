@@ -13,12 +13,13 @@ Spend a few minutes asking these questions:
 - What talents do we bring to the table?
   - Share a bit of your experience and skills
 
-- Set working agreements
-  - What agreements do you, as a team, want to make for the time you are spending together?
+- Set working expectations
+  - What expectations do you, as a team, want to make for your time spent competing?
   - Suggestions:
-    - Show Up On Time
-    - Agree on when you'll meet
+    - Show Up On Time.
+    - Agree on when you'll meet.
     - "Art of the Possible" - no idea is stupid, let's consider everything.
     - Be Present - when you're here, you're here, be intentional with your time.
+    - Complete the work you said you would complete.
 
 That's it! Now you have a clear goal for your team to accomplish and you know why each of you are here.
